@@ -1,0 +1,119 @@
+% Homework 3 (HW3) - CSC429/629 Spring 2021 - Points: 5
+% Due: Mar. 25, 2021
+% Lateness penalty: -1 per day
+
+% This is a 1 or 2 person assignment. Type your name(s) below:
+% 1. Emily Ashburn
+% 2.
+% If 2 persons work on this, you should submit a 
+% duplicate copy on Canvas under each of your names.
+% You may not collaborate with anyone except your partner.
+% By submitting this assignment, you implicitly agree to abide
+% by the Computer Science Dept. Academic Integrity Policy.
+
+% DO NOT USE THESE PROLOG FEATURES IN THIS ASSIGNMENT!! YOU
+% WILL NOT RECEIVE CREDIT FOR A SOLUTION CONTAINING THESE: 
+% "assert", ";", "->".
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% What to turn in:
+% 1. Submit a copy of your program on Canvas named HW3.txt.
+%    The digital copy will be used in case the grader needs to 
+%    run your program to verify that it works, and to determine 
+%    the submission time if late.  Each student on a team should
+%    submit a duplicate copy on Canvas under his/her own name.
+% 2. Submit a copy of your SCREEN SHOTS on Canvas as
+%    a .pdf, .doc, or .docx file. Turn in one document with all
+%    screen shots. Do not use a phone to photograph the screen.
+%    Use "print screen" (PrtSc) and paste into a document.
+%    Eact student on a team should submit a copy on Canvas
+%    under his/her own name.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problem: Define the BN given in HW3-data.docx and then run
+% Bratko's modified BN interpreter on it to answer the queries
+% given in HW3-data.docx.
+% Edit this file - add your solution to the steps below.
+% Make your solution readable using indentation and white
+% space. Do not use a line length that will wrap when printed.
+% To run this file, rename it with a .pl extension if your are
+% using SWI Prolog, or the proper extension for whatever Prolog
+% you are using - you may use any standard Prolog interpreter.
+
+% Directives (must be at the top of your SWI Prolog program).
+% Syntax may differ in other Prolog interpreters.
+
+:- dynamic p/2.
+:- dynamic p/3.
+
+% Step 1:  Define the graph HERE using the syntax required by
+% Bratko's BN interpreter.  Example: if there is an arc
+% in the BN from node a to node b (a is the parent of b), say: 
+% parent(a, b).    
+% Use the BN variables (sum, ars, etc.) in HW3-data!!
+
+parent(clc, cac).
+parent(cac, ch).
+parent(cac, cg).
+parent(db, nc).
+parent(db, ch).
+parent(dh, das).
+parent(das, cg).
+parent(das, bg).
+
+% Step 2: Define the prior probabilities HERE
+% in the syntax for Bratko's BN interpreter.
+% Example: p(b, 0.001). % prior probability of b  is 0.001
+% Note: Use lower case "p" in step 2 and step 3!!
+
+p(clc, 0.9).
+p(dh, 0.2).
+p(db, 0.5).
+
+% Step 3: Define the conditional probability tables HERE
+% in the syntax for Bratko's BN interpreter.
+% Note: the 1st argument is a node, the 2nd argument
+% is a list of nodes or negated nodes, and the 3rd
+% argument is the conditional probablity.
+% Example syntax: 
+% p(sensor, [burglary, not(lightning)], 0.9).
+% Note: the above in mathematical notation is:
+% P(sensor | burglary & -lightening) = 0.9
+
+p(cac, [not(clc)], 0.1).
+p(cac, [clc], 0.8).
+
+p(das, [not(dh)], 0.0).
+p(das, [dh], 0.5).
+
+p(bg, [not(das)], 0.5).
+p(bg, [das], 0.9).
+
+p(nc, [not(db)], 0.0).
+p(nc, [db], 0.7).
+
+p(ch, [not(db), not(cac)], 0.1).
+p(ch, [not(db), cac], 0.7).
+p(ch, [db, not(cac)], 0.6).
+p(ch, [db, cac], 0.8).
+
+p(cg, [not(cac), not(das)], 0.3).
+p(cg, [not(cac), das], 0.8).
+p(cg, [cac, not(das)], 0.95).
+p(cg, [cac, das], 0.95).
+
+% Step 4: Follow these instructions for running your HW3 
+%   with my modification of Bratko's BN interpreter:
+%   1. Copy fig15_11_mod.pl (my mod of Bratko's BN interpreter) 
+%      from Canvas to your computer.
+%   2. Start Prolog on your HW3 program. Before running your 
+%      program, tell Prolog to consult fig15_11_mod.pl
+%      (in SWI Prolog, you would use menu commands: File
+%      menu -> Consult -> fig15_11_mod.pl)
+
+
+% Step 5: Take screen shots showing the results of
+% running the queries given in HW3-data.docx (copied here):
+% ?- prob(cac, [ch, cg, clc], N).
+% ?- prob(cac, [nc, ch, cg, not(clc), bg], N).
+% ?- prob(das, [ch, cg, clc, not(dh), not(bg)], N).
+% ?- prob(das, [cg, bg, dh, not(clc)], N).
