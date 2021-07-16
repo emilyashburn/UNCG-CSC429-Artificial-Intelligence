@@ -1,0 +1,114 @@
+Risk Factors (2-4): Overwatering, Wrong_soil, Not_enough_sun, No_drainage_hole
+Diagnoses (3>): Stunted_growth, Leggy_stems, Root_rot, Mealy_bugs
+Symptoms (2-3): Dead_plant,
+Dried_out_leaves, Yellow_transparent_leaves
+
+Overwatering MAY CAUSE Root_rot AND Stunted_growth 
+Wrong_soil MAY CAUSE Stunted_growth AND Leggy_stems
+Not_enough_sun MAY CAUSE Stunted_growth AND Leggy_stems
+No_drainage_hole MAY CAUSE Stunted_growth AND Root_rot AND Mealy_bugs
+Stunted_growth MAY CAUSE Dried_out_leaves
+Leggy_stems MAY CAUSE Dried_out_leaves
+Root_rot MAY CAUSE Dried_out_leaves AND Dead_plant AND Yellow_transparent_leaves
+Mealy_bugs MAY CAUSE Dead_plant
+
+Prior probabilities:
+p(nd, .7).
+p(ow, .45).
+p(cs, .35).
+p(es, .8).
+-----------------
+Conditional probability tables:
+p(mb | nd) =		mb	nd
+.2			T	F
+.8			T	T
+
+p(mb, [not(nd)], 0.2).
+p(mb, [nd], 0.8).
+
+p(rr | nd, ow) = 	rr	nd	ow
+.0			T	F	F
+.6			T	F	T
+.45			T	T	F
+.97			T	T	T
+
+p(rr, [not(nd), not(ow)], 0.0).
+p(rr, [not(nd), ow], 0.6).
+p(rr, [nd, not(ow)], 0.45).
+p(rr, [nd, ow], 0.97).
+
+p(sg | ow, cs, es) =	sg	ow	cs	es
+.1			T	F	F	F
+.4			T	T	F	F
+.2			T	F	T	F
+.2			T	F	F	T
+.6			T	F	T	T
+.7			T	T	T	F
+.5			T	T	F	T
+.95			T	T	T	T
+
+p(sg, [not(ow), not(cs), not(es)], 0.1).
+p(sg, [ow, not(cs), not(es)], 0.4).
+p(sg, [not(ow), cs, not(es)], 0.2).
+p(sg, [not(ow), not(cs), es], 0.2).
+p(sg, [not(ow), cs, es], 0.6).
+p(sg, [ow, cs, not(es)], 0.7).
+p(sg, [ow, not(cs), es], 0.5).
+p(sg, [ow, cs, es], 0.95).
+
+p(ls | es) =		ls	es
+.1			T	F
+.75			T	T
+
+p(ls, [not(es)], 0.1).
+p(ls, [es], 0.75).
+
+p(dp | mb, rr) = 	dp	mb	rr
+.05			T	F	F
+.6			T	F	T
+.3			T	T	F
+.8			T	T	T
+
+p(dp, [not(mb), not(rr)], 0.05).
+p(dp, [not(mb), rr], 0.6).
+p(dp, [mb, not(rr)], 0.3).
+p(dp, [mb, rr], 0.8).
+
+p(y | rr, sg) = 	y	rr	sg
+.2			T	F	F
+.35			T	F	T
+.1			T	T	F
+.65			T	T	T
+
+p(y, [not(rr), not(sg)], 0.2).
+p(y, [not(rr), sg], 0.35).
+p(y, [rr, not(sg)], 0.1).
+p(y, [rr, sg], 0.65).
+
+p(dl | sg, ls) = 	dl	sg	ls
+.3			T	F	F
+.1			T	F	T
+.6			T	T	F
+.7			T	T	T
+
+p(dl, [not(sg), not(ls)], 0.3).
+p(dl, [not(sg), ls], 0.1).
+p(dl, [sg, not(ls)], 0.6).
+p(dl, [sg, ls], 0.7).
+
+---------------------------------------
+
+
+parent(nd, mb).
+parent(nd. rr).
+parent(ow, rr).
+parent(ow, sg).
+parent(cs, sg).
+parent(es, sg).
+parent(es, ls).
+parent(mb, dp).
+parent(rr, dp).
+parent(rr, y).
+parent(sg, y).
+parent(sg, dl).
+parent(ls, dl).

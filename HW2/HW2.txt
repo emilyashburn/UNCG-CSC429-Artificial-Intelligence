@@ -1,0 +1,177 @@
+% Homework 2 (HW2.txt) - CSC429/629 - Spring 2021
+% Due: on Canvas Mar 15, 2021
+% Total points: 5 (one point per problem)
+% Lateness penalty: -1 per day
+
+% This is a 1 or 2 person assignment. Type your name(s) below:
+% 1. Emily Ashburn
+% 2.
+% If 2 persons work on this, each of you should submit a
+% duplicate copy on Canvas under your own name.
+% You may not collaborate with anyone except your partner.
+% By submitting this assignment, you agree to abide by
+% the Computer Science Dept. Academic Integrity Policy.
+
+% Edit this file to add your solution in Step 1 and 2 below.
+% Make your solution readable using indentation and white
+% space. Do not use a line length that will wrap when printed.
+% To run this file, rename it with a .pl extension if your are
+% using SWI Prolog, or the proper extension for whatever Prolog
+% you are using. (You may use any standard Prolog interpreter.)
+
+% What to turn in:
+% 1. This .txt file with your solutions added to it. Submit as
+%    .txt on Canvas. (The Canvas file may
+%    be used to verify that your program works. Also, the date
+%    submitted on Canvas will be used to determine lateness.)
+% 2. Screen shots showing the output of your program for different
+%    inputs . Submit screen shots all in one .doc, .docx or .pdf
+%    file on Canvas. Do NOT turn in a separate file (such as
+%    .png) for each screen shot!! Do NOT use your phone or camera
+%    to make screen shots!! Screen shots must be readable.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   This homework uses a forward-chaining (FC) rule interpreter.
+
+%   Instructions for using the FC rule interpreter:
+%   1. Copy fig15_7_mod_1.6.17.pl (my version of Bratko's)
+%      from Canvas to your computer.  (The 'not' operator
+%      has been fixed.)
+%   2. Start Prolog on your HW2 program. Before running HW2,
+%      you need to tell Prolog to also use fig15_7_mod_1.6.17.pl
+%      (in SWI Prolog, you would use menu commands: File
+%      menu -> Consult -> fig15_7_mod_1.6.17.pl)
+%   3. Warnings: if you run the program more than once,
+%      retract the facts, or just QUIT prolog and start
+%      over to flush the facts from memory.  Also, note that
+%      the right-hand side of the expert system rules may not
+%      contain 'and', 'or', or 'not'!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Problem: Implement a system that plans breakfast,
+% lunch, and dinner for one day, based upon the user's
+% preferences.  The system first asks the user about his
+% or her preferences by at least 3 questions. Then it
+% runs an expert system to derive the menu for breakfast,
+% lunch, and dinner IN THAT ORDER. You can ask any questions
+% that you wish. The system should plan different
+% menus depending on the answers, though it is okay to have
+% the same menu for some answers. Screen shots should show
+% the output of your program for EVERY REASONABLE INPUT.
+
+% Here are some sample interactions. (Note that the FC rule
+% interpreter wrote "Derived ..." and "No more facts" and
+% Prolog wrote 'true'.)
+
+% ?- planner.
+% Are you a vegetarian? (y or n): n.
+% Do you eat beef? (y or n): y.
+% Do you like fish? (y or n): y.
+% ... etc.
+% Derived: plan_breakfast
+% Derived: eat_egg_biscuit_for_breakfast
+% Derived: plan_lunch
+% Derived: eat_beef_burger_for_lunch
+% Derived: plan_dinner
+% Derived: eat_fish_for_dinner
+% No more facts
+% true
+
+% ?- planner.
+% Are you a vegetarian? (y or n): n.
+% Do you eat beef? (y or n): n.
+% Do you like fish? (y or n): n.
+% Derived: plan_breakfast
+% Derived: eat_bacon_and_eggs_for_breakfast
+% Derived: plan_lunch
+% Derived: eat_veggie_burger_for_lunch
+% Derived: plan_dinner
+% Derived: eat_fried_chicken_for_dinner
+% No more facts
+% true.
+
+
+%%%%%%%%%% Implementation goes here: %%%%%%%%
+
+% Directives (must be at the top of your SWI Prolog program.
+% Syntax may differ in other Prolog interpreters. This is
+% needed so the program can assert the fact predicate.
+:- dynamic fact/1.
+
+% Operator definitions needed for forward chaining if-then rules.
+:- op(800,fx,if).
+:- op(700,xfx,then).
+:- op(300,xfy,or).
+:- op(200,xfy,and).
+
+% The following line should be included in your program:
+planner :- ask_user, forward.
+% 'ask_user' is defined in Step 1 below.
+% 'forward' starts Bratko's forward chaining
+% rule interpreter on your rules in step 2.
+
+% Step 1 (2 points):
+% Implement the Prolog predicate ask_user HERE.
+% ask_user asks questions, reads in the answers, and
+% asserts the user's answers as facts.
+
+% Type your solution to step 1 here:
+
+ask_user :-
+    write('Are you a vegetarian? (y or n): '),
+    read(Veg),
+    translate_veg(Veg),
+    write('Do you eat beef? (y or n): '),
+    read(Beef),
+    translate_beef(Beef),
+    write('Do you like fish? (y or n): '),
+    read(Fish),
+    translate_fish(Fish),
+    write('Do you like chocolate? (y or n): '),
+    read(Chocolate),
+    translate_chocolate(Chocolate).
+
+translate_veg(y) :- assert(fact(veg)).
+translate_veg(n) :- assert(fact(notveg)).
+translate_beef(y) :- assert(fact(beef)).
+translate_beef(n) :- assert(fact(notbeef)).
+translate_fish(y) :- assert(fact(fish)).
+translate_fish(n) :- assert(fact(notfish)).
+translate_chocolate(y) :- assert(fact(chocolate)).
+translate_chocolate(n) :- assert(fact(notchocolate)).
+
+
+% Step 2 (3 points): Put your forward chaining rules here.
+% Warning: 'and', 'or', and 'not' can only be used in the
+% 'if' part (condition) of the expert system rule. If
+% you put them in the 'then' part, you probably will
+% not get an error/warning, but your rules won't work
+% correctly!
+% See Canvas lecture notes for more info on rule syntax.
+
+% Type your solution to step 2 here:
+
+% Vegetarian meals (Breakfast)
+if veg then plan_breakfast.
+if notveg then plan_breakfast.
+if veg and plan_breakfast then eat_granola_and_yogurt_for_breakfast.
+if notveg and plan_breakfast then eat_egg_and_bacon_biscuit_for_breakfast.
+
+% Beef meals (Lunch)
+if beef then plan_lunch.
+if notbeef then plan_lunch.
+if beef and plan_lunch then eat_ground_beef_and_rice_for_lunch.
+if notbeef and plan_lunch then eat_chicken_fried_rice_for_lunch.
+
+% Fish meals (Dinner)
+if fish then plan_dinner.
+if notfish then plan_dinner.
+if fish and plan_dinner then eat_grilled_salmon_with_broccoli_for_dinner.
+if notfish and plan_dinner then eat_potato_soup_for_dinner.
+
+% Dessert (After dinner)
+if chocolate then plan_dessert.
+if notchocolate then plan_dessert.
+if chocolate and plan_dessert then eat_chocolate_cake_for_dessert.
+if notchocolate and plan_dessert then eat_vanilla_ice_cream_for_dessert.
